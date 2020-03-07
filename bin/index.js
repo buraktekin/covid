@@ -64,7 +64,7 @@ axios.get(url, { headers: { Accept: "application/json" } })
       console.log("no data found!");
     }
   } else {
-    console.log(data[0]);
+    console.log(res.data.features[0]);
   }
 });
 
