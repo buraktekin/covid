@@ -1,6 +1,6 @@
 // Boxen for a better UI
 const ui = {
-  boxenOptions = {
+  boxenOptions: {
     locInfo: {
       padding: 1,
       borderStyle: "bold",
