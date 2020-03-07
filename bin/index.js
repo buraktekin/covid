@@ -30,5 +30,3 @@ const boxenOptions = {
 const msgBox = boxen( message, boxenOptions );
 console.log(msgBox);
 
-
-console.log(url);

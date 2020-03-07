@@ -9,7 +9,7 @@
   "author": "Burak Tekin",
   "license": "MIT",
   "bin": {
-    "conv19": "./bin/index.js"
+    "covid": "./bin/index.js"
   },
   "dependencies": {
     "axios": "^0.19.2",
