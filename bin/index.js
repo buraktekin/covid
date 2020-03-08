@@ -4,8 +4,13 @@ const axios = require('axios')
 const yargs = require('yargs')
 const chalk = require("chalk")
 const boxen = require("boxen")
-const { boxenOptions } = require("./ui")
+const CFonts = require('cfonts')
+const { ui } = require("./ui")
 const { generateURL } = require("./arcGis")
+
+
+// get options to format interface
+const { boxenOptions, cfontsOptions } = ui
 
 
 // add args to let users be able to select a specific location
@@ -27,24 +32,34 @@ const message =
     `Selected Location: ${options.location.toUpperCase()}`
     : 
     "No Location Selected"
+CFonts.say('-- COVID-19 --', cfontsOptions.title);
 const msgBox = boxen( message, boxenOptions.locInfo )
-console.log(chalk.black.bold(msgBox))
+console.log(chalk.white.bold(msgBox))
 // ##############################################
 
 
 // Display the results
 const displayResults = (data) => {
+  let lastUpdate = new Date()
   if( options.location ) {
-    const { Confirmed = 0, Deaths = 0, Recovered = 0 } = data
-    const msgBoxDeaths = boxen( `Deaths:\n${Deaths}`, boxenOptions.deaths )
-    const msgBoxConfirmed = boxen( `Confirmed:\n${Confirmed}`, boxenOptions.confirmed )
-    const msgBoxRecovered = boxen( `Recovered:\n${Recovered}`, boxenOptions.recovered )
+    const { Last_Update, Confirmed = 0, Deaths = 0, Recovered = 0 } = data
+    const msgBoxDeaths = boxen( `Deaths: ${Deaths}`, boxenOptions.deaths )
+    const msgBoxConfirmed = boxen( `Confirmed: ${Confirmed}`, boxenOptions.confirmed )
+    const msgBoxRecovered = boxen( `Recovered: ${Recovered}`, boxenOptions.recovered )
     console.log(chalk.white.bold( msgBoxDeaths ))
+    console.log(chalk.white.bold( msgBoxConfirmed))
+    console.log(chalk.white.bold( msgBoxRecovered ))
+    lastUpdate = Last_Update
+  } else {
+    const { Report_Date, Total_Confirmed = 0, Total_Recovered = 0 } = data
+    const msgBoxConfirmed = boxen( `Total Confirmed:\n${Total_Confirmed}`, boxenOptions.deaths )
+    const msgBoxRecovered = boxen( `Total Recovered:\n${Total_Recovered}`, boxenOptions.recovered )
     console.log(chalk.white.bold( msgBoxConfirmed ))
     console.log(chalk.white.bold( msgBoxRecovered ))
-  } else {
-    console.log(data)
+    lastUpdate = Report_Date
   }
+  console.log("\n Last Update: ", new Date(lastUpdate).toUTCString())
+  CFonts.say('-------------', cfontsOptions.title);
 }
 // ##############################################
 
