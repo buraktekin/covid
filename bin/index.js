@@ -40,26 +40,32 @@ console.log(chalk.white.bold(msgBox))
 
 // Display the results
 const displayResults = (data) => {
-  let lastUpdate = new Date()
-  if( options.location ) {
-    const { Last_Update, Confirmed = 0, Deaths = 0, Recovered = 0 } = data
-    const msgBoxDeaths = boxen( `Deaths: ${Deaths}`, boxenOptions.deaths )
-    const msgBoxConfirmed = boxen( `Confirmed: ${Confirmed}`, boxenOptions.confirmed )
-    const msgBoxRecovered = boxen( `Recovered: ${Recovered}`, boxenOptions.recovered )
-    console.log(chalk.white.bold( msgBoxDeaths ))
-    console.log(chalk.white.bold( msgBoxConfirmed))
-    console.log(chalk.white.bold( msgBoxRecovered ))
-    lastUpdate = Last_Update
+  if(data) {
+    let lastUpdate = new Date()
+    if( options.location ) {
+      const { Last_Update, Confirmed = 0, Deaths = 0, Recovered = 0 } = data
+      const msgBoxDeaths = boxen( `Deaths: ${Deaths}`, boxenOptions.deaths )
+      const msgBoxConfirmed = boxen( `Confirmed: ${Confirmed}`, boxenOptions.confirmed )
+      const msgBoxRecovered = boxen( `Recovered: ${Recovered}`, boxenOptions.recovered )
+      console.log(chalk.white.bold( msgBoxDeaths ))
+      console.log(chalk.white.bold( msgBoxConfirmed))
+      console.log(chalk.white.bold( msgBoxRecovered ))
+      lastUpdate = Last_Update
+    } else {
+      const { Report_Date, Total_Confirmed = 0, Total_Recovered = 0 } = data
+      const msgBoxConfirmed = boxen( `Total Confirmed:\n${Total_Confirmed}`, boxenOptions.deaths )
+      const msgBoxRecovered = boxen( `Total Recovered:\n${Total_Recovered}`, boxenOptions.recovered )
+      console.log(chalk.white.bold( msgBoxConfirmed ))
+      console.log(chalk.white.bold( msgBoxRecovered ))
+      lastUpdate = Report_Date
+    }
+    console.log("\n Last Update: ", new Date(lastUpdate).toUTCString())
+    CFonts.say('-------------', cfontsOptions.title);
   } else {
-    const { Report_Date, Total_Confirmed = 0, Total_Recovered = 0 } = data
-    const msgBoxConfirmed = boxen( `Total Confirmed:\n${Total_Confirmed}`, boxenOptions.deaths )
-    const msgBoxRecovered = boxen( `Total Recovered:\n${Total_Recovered}`, boxenOptions.recovered )
-    console.log(chalk.white.bold( msgBoxConfirmed ))
-    console.log(chalk.white.bold( msgBoxRecovered ))
-    lastUpdate = Report_Date
+    const msgBoxDeaths = boxen( `No data found for: ${options.location}`)
+    console.log(chalk.white.bold( msgBoxDeaths ))
   }
-  console.log("\n Last Update: ", new Date(lastUpdate).toUTCString())
-  CFonts.say('-------------', cfontsOptions.title);
+  
 }
 // ##############################################
 
