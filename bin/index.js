@@ -8,10 +8,8 @@ const CFonts = require('cfonts')
 const { ui } = require("./ui")
 const { generateURL } = require("./arcGis")
 
-
 // get options to format interface
 const { boxenOptions, cfontsOptions } = ui
-
 
 // add args to let users be able to select a specific location
 const options = yargs
@@ -25,7 +23,6 @@ const options = yargs
   .argv
 // ##############################################
 
-
 // message to display selected location
 const message = 
   options.location ? 
@@ -34,9 +31,8 @@ const message =
     "No Location Selected"
 CFonts.say('-- COVID-19 --', cfontsOptions.title);
 const msgBox = boxen( message, boxenOptions.locInfo )
-console.log(chalk.white.bold(msgBox))
+render(msgBox)
 // ##############################################
-
 
 // Display the results
 const displayResults = (data) => {
@@ -47,28 +43,32 @@ const displayResults = (data) => {
       const msgBoxDeaths = boxen( `Deaths: ${Deaths}`, boxenOptions.deaths )
       const msgBoxConfirmed = boxen( `Confirmed: ${Confirmed}`, boxenOptions.confirmed )
       const msgBoxRecovered = boxen( `Recovered: ${Recovered}`, boxenOptions.recovered )
-      console.log(chalk.white.bold( msgBoxDeaths ))
-      console.log(chalk.white.bold( msgBoxConfirmed))
-      console.log(chalk.white.bold( msgBoxRecovered ))
+      render(msgBoxDeaths)
+      render(msgBoxConfirmed)
+      render(msgBoxRecovered)
       lastUpdate = Last_Update
     } else {
       const { Report_Date, Total_Confirmed = 0, Total_Recovered = 0 } = data
       const msgBoxConfirmed = boxen( `Total Confirmed:\n${Total_Confirmed}`, boxenOptions.deaths )
       const msgBoxRecovered = boxen( `Total Recovered:\n${Total_Recovered}`, boxenOptions.recovered )
-      console.log(chalk.white.bold( msgBoxConfirmed ))
-      console.log(chalk.white.bold( msgBoxRecovered ))
+      render(msgBoxConfirmed)
+      render(msgBoxRecovered)
       lastUpdate = Report_Date
     }
     console.log("\n Last Update: ", new Date(lastUpdate).toUTCString())
     CFonts.say('-------------', cfontsOptions.title);
   } else {
-    const msgBoxDeaths = boxen( `No data found for: ${options.location}`)
-    console.log(chalk.white.bold( msgBoxDeaths ))
+    const msgBoxNoDataFound = boxen( `No data found for: ${options.location}`)
+    render(msgBoxNoDataFound)
   }
-  
 }
-// ##############################################
 
+// Render results
+const render = (data) => {
+  return console.log(chalk.white.bold(data))
+}
+
+// ##############################################
 
 // Fetch data and display results
 async function fetchData() {
@@ -95,6 +95,5 @@ async function fetchData() {
   })
 }
 // ##############################################
-
 
 fetchData()
