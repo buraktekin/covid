@@ -15,4 +15,4 @@ A Node based CLI app to display the last updated numbers of the COVID-19 cases.
 
 ## Enjoy\!
 
-🤜💥🤛: Tons of thanks to @okanisildur for his contributions.
+#### 🤜💥🤛: Tons of thanks to [![okanisildur](https://avatars1.githubusercontent.com/u/27828319?s=32&u=336ad943d9138cd09a4131cd804fc70d80d67dfb&v=4)](https://github.com/okanisildur) for his contributions.
