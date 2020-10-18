@@ -11,6 +11,15 @@ const { generateURL } = require("./arcGis")
 // get options to format interface
 const { boxenOptions, cfontsOptions } = ui
 
+// Render results
+const render = (data) => {
+  return console.log(chalk.white.bold(data))
+}
+
+const spaceFix = (msg, info) => {
+  return info + ' '.repeat(msg.length - info.length)
+}
+
 // add args to let users be able to select a specific location
 const options = yargs
   .usage("Usage: -l <location>")
@@ -24,13 +33,9 @@ const options = yargs
 // ##############################################
 
 // message to display selected location
-const message = 
-  options.location ? 
-    `Selected Location: ${options.location.toUpperCase()}`
-    : 
-    "No Location Selected"
-CFonts.say('-- COVID-19 --', cfontsOptions.title);
+const message = options.location ? `Selected Location: ${options.location.toUpperCase()}`: "No Location Selected";
 const msgBox = boxen( message, boxenOptions.locInfo )
+CFonts.say(' -- COVID-19 -- ', cfontsOptions.title);
 render(msgBox)
 // ##############################################
 
@@ -40,12 +45,13 @@ const displayResults = (data) => {
     let lastUpdate = new Date()
     if( options.location ) {
       const { Last_Update, Confirmed = 0, Deaths = 0, Recovered = 0 } = data
-      const msgBoxDeaths = boxen( `Deaths: ${Deaths}`, boxenOptions.deaths )
-      const msgBoxConfirmed = boxen( `Confirmed: ${Confirmed}`, boxenOptions.confirmed )
-      const msgBoxRecovered = boxen( `Recovered: ${Recovered}`, boxenOptions.recovered )
+      const msgBoxDeaths = boxen( spaceFix(message, `Deaths: ${Deaths}`), boxenOptions.deaths )
+      const msgBoxConfirmed = boxen( spaceFix(message, `Confirmed: ${Confirmed}`), boxenOptions.confirmed )
+      const msgBoxRecovered = boxen( spaceFix(message, `Recovered: ${Recovered}`), boxenOptions.recovered )
       render(msgBoxDeaths)
       render(msgBoxConfirmed)
       render(msgBoxRecovered)
+      
       lastUpdate = Last_Update
     } else {
       const { Report_Date, Total_Confirmed = 0, Total_Recovered = 0 } = data
@@ -55,17 +61,13 @@ const displayResults = (data) => {
       render(msgBoxRecovered)
       lastUpdate = Report_Date
     }
-    console.log("\n Last Update: ", new Date(lastUpdate).toUTCString())
-    CFonts.say('-------------', cfontsOptions.title);
+    
+    console.log('\n', chalk.bold.magenta('Last Update: ' + new Date(lastUpdate).toUTCString()));
+    CFonts.say('  -- end --  ', cfontsOptions.title);
   } else {
     const msgBoxNoDataFound = boxen( `No data found for: ${options.location}`)
     render(msgBoxNoDataFound)
   }
-}
-
-// Render results
-const render = (data) => {
-  return console.log(chalk.white.bold(data))
 }
 
 // ##############################################
