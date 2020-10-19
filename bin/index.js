@@ -7,6 +7,7 @@ const boxen = require("boxen")
 const CFonts = require('cfonts')
 const { ui } = require("./ui")
 const { generateURL } = require("./arcGis")
+const { option } = require('yargs')
 
 // get options to format interface
 const { boxenOptions, cfontsOptions } = ui
@@ -21,15 +22,16 @@ const spaceFix = (msg, info) => {
 }
 
 const fetchData = async (options) => {
-  const url = generateURL(options.location)
+  const location = options.location
+  const url = generateURL(location)
   await axios.get(url, { headers: { Accept: "application/json" } })
   .then(res => {
-    if (options.location) {
-      // if searching for jokes, loop over the results
+    if (location) {
       const data = res.data.features
       for(let i = 0; i < data.length; i++) {
-        if(data[i].attributes.Country_Region.toLowerCase() === options.location.toLowerCase()) {
-          return data[i].attributes
+        const { Country_Region: region, ...attr } = data[i].attributes
+        if(region.toLowerCase() === location.toLowerCase()) {
+          return attr
         }
       }
       if (data.length === 0) {
@@ -43,16 +45,14 @@ const fetchData = async (options) => {
     displayResults(res, options)
   })
 }
-// ##############################################
 
 
 // Display the results
 const displayResults = (data, options) => {
-
   // message to display selected location
   const message = options.location ? 
-  `Selected Location: ${options.location.toUpperCase()}`
-  : "No Location Selected"
+    `Selected Location: ${options.location.toUpperCase()}`
+    : "No Location Selected"
   const msgBox = boxen( message, boxenOptions.locInfo )
   
   CFonts.say(
